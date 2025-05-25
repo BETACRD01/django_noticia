@@ -1,0 +1,264 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ site_name }} - {{ site_description }}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container position-relative">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">
+                    Mantente Informado con las Últimas Noticias
+                </h1>
+                <p class="lead mb-4">
+                    Descubre las historias más importantes del día con análisis profundo y reportajes de calidad 
+                    de nuestro equipo de periodistas especializados.
+                </p>
+                <div class="d-flex gap-3 flex-wrap">
+                    <a href="#articulos" class="btn btn-light btn-lg">
+                        <i class="fas fa-newspaper me-2"></i>Ver Noticias
+                    </a>
+                    <a href="{% url 'autores_list' %}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-users me-2"></i>Conocer Autores
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-4 text-center">
+                <i class="fas fa-globe fa-8x opacity-25"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-4 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 col-6 mb-3">
+                <div class="d-flex align-items-center justify-content-center">
+                    <i class="fas fa-newspaper text-primary fa-2x me-3"></i>
+                    <div>
+                        <h4 class="mb-0 fw-bold">{{ articulos.paginator.count }}</h4>
+                        <small class="text-muted">Artículos</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="d-flex align-items-center justify-content-center">
+                    <i class="fas fa-list text-success fa-2x me-3"></i>
+                    <div>
+                        <h4 class="mb-0 fw-bold">{{ categorias.count }}</h4>
+                        <small class="text-muted">Categorías</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="d-flex align-items-center justify-content-center">
+                    <i class="fas fa-users text-warning fa-2x me-3"></i>
+                    <div>
+                        <h4 class="mb-0 fw-bold">{{ autores_destacados.count }}</h4>
+                        <small class="text-muted">Autores</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="d-flex align-items-center justify-content-center">
+                    <i class="fas fa-clock text-info fa-2x me-3"></i>
+                    <div>
+                        <h4 class="mb-0 fw-bold">24/7</h4>
+                        <small class="text-muted">Actualizado</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Articles -->
+<section class="py-5" id="articulos">
+    <div class="container">
+        <div class="row">
+            <!-- Main Content -->
+            <div class="col-lg-8">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2 class="h3 fw-bold mb-0">
+                        <i class="fas fa-star text-warning me-2"></i>Artículos Destacados
+                    </h2>
+                    <span class="badge bg-primary fs-6">{{ articulos.paginator.count }} artículos</span>
+                </div>
+                
+                {% if articulos %}
+                    <div class="row g-4">
+                        {% for articulo in articulos %}
+                            <div class="col-md-6 {% if forloop.first %}col-lg-12{% endif %}">
+                                <article class="card h-100 card-hover border-0 shadow-sm">
+                         {% if articulo.imagen %}
+                    <img src="{{ articulo.imagen.url }}" 
+                         class="card-img-top card-img-responsive {% if forloop.first %}card-img-first{% else %}card-img-other{% endif %}" 
+                         alt="{{ articulo.titulo }}"
+                               loading="lazy">
+                                { % else %}
+                      <div class="card-img-top card-img-responsive {% if forloop.first %}card-img-first{% else %}card-img-other{% endif %} bg-light d-flex align-items-center justify-content-center">
+                     <i class="fas fa-image fa-3x text-muted"></i>
+                         </div>
+                              {% endif %}
+                                    
+                                    <div class="card-body d-flex flex-column">
+                                        <div class="d-flex align-items-center gap-2 mb-3">
+                                            <a href="{% url 'categoria_detail' articulo.categoria.slug %}" 
+                                               class="category-badge">
+                                                {{ articulo.categoria.nombre }}
+                                            </a>
+                                            <div class="article-meta">
+                                                <i class="fas fa-calendar"></i>
+                                                {{ articulo.fecha_publicacion|date:"d M Y" }}
+                                            </div>
+                                            <div class="article-meta">
+                                                <i class="fas fa-eye"></i>
+                                                {{ articulo.vistas }}
+                                            </div>
+                                        </div>
+                                        
+                                        <h5 class="card-title {% if forloop.first %}h4{% endif %}">
+                                            <a href="{% url 'articulo_detail' articulo.pk %}" 
+                                               class="text-decoration-none text-dark">
+                                                {{ articulo.titulo }}
+                                            </a>
+                                        </h5>
+                                        
+                                        <p class="card-text text-muted flex-grow-1">
+                                            {{ articulo.resumen|default:articulo.contenido|truncatewords:20 }}
+                                        </p>
+                                        
+                                        <div class="d-flex align-items-center justify-content-between mt-auto">
+                                            <div class="d-flex align-items-center">
+                                                {% if articulo.autor.foto %}
+                                                    <img src="{{ articulo.autor.foto.url }}" 
+                                                         class="author-avatar me-2" 
+                                                         alt="{{ articulo.autor.nombre }}">
+                                                {% else %}
+                                                    <div class="author-avatar me-2 bg-secondary d-flex align-items-center justify-content-center">
+                                                        <i class="fas fa-user text-white"></i>
+                                                    </div>
+                                                {% endif %}
+                                                <div>
+                                                    <a href="{% url 'autor_detail' articulo.autor.pk %}" 
+                                                       class="text-decoration-none text-dark fw-medium small">
+                                                        {{ articulo.autor.nombre }}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="article-meta">
+                                                <i class="fas fa-comments"></i>
+                                                {{ articulo.get_comentarios_count }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-newspaper fa-4x text-muted mb-3"></i>
+                        <h4 class="text-muted">No hay artículos destacados disponibles</h4>
+                        <p class="text-muted">Vuelve pronto para ver las últimas noticias.</p>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Autores Destacados -->
+                <div class="sidebar">
+                    <h5><i class="fas fa-users me-2"></i>Autores Destacados</h5>
+                    {% for autor in autores_destacados %}
+                        <div class="d-flex align-items-center mb-3">
+                            {% if autor.foto %}
+                                <img src="{{ autor.foto.url }}" 
+                                     class="rounded-circle me-3" 
+                                     style="width: 50px; height: 50px; object-fit: cover;" 
+                                     alt="{{ autor.nombre }}">
+                            {% else %}
+                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3" 
+                                     style="width: 50px; height: 50px;">
+                                    <i class="fas fa-user text-white"></i>
+                                </div>
+                            {% endif %}
+                            <div>
+                                <a href="{% url 'autor_detail' autor.pk %}" 
+                                   class="text-decoration-none fw-medium">
+                                    {{ autor.nombre }}
+                                </a>
+                                <div class="small text-muted">
+                                    {{ autor.articulos_count }} artículos
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <a href="{% url 'autores_list' %}" class="btn btn-outline-primary btn-sm w-100">
+                        Ver todos los autores
+                    </a>
+                </div>
+                
+                <!-- Artículos Más Leídos -->
+                <div class="sidebar">
+                    <h5><i class="fas fa-fire me-2"></i>Más Leídos</h5>
+                    {% for articulo in articulos_sidebar %}
+                        <div class="d-flex mb-3">
+                            <div class="badge bg-primary me-3 mt-1">{{ forloop.counter }}</div>
+                            <div>
+                                <a href="{% url 'articulo_detail' articulo.pk %}" 
+                                   class="text-decoration-none text-dark fw-medium small">
+                                    {{ articulo.titulo|truncatechars:60 }}
+                                </a>
+                                <div class="small text-muted">
+                                    <i class="fas fa-eye"></i> {{ articulo.vistas }} vistas
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Newsletter -->
+                <div class="sidebar bg-primary text-white">
+                    <h5 class="text-white"><i class="fas fa-envelope me-2"></i>Newsletter</h5>
+                    <p class="small mb-3">Recibe las noticias más importantes directamente en tu email.</p>
+                    <form>
+                        <div class="mb-3">
+                            <input type="email" class="form-control" placeholder="Tu email" required>
+                        </div>
+                        <button type="submit" class="btn btn-light w-100">
+                            <i class="fas fa-paper-plane me-2"></i>Suscribirse
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Smooth scroll para el enlace "Ver Noticias"
+document.querySelector('a[href="#articulos"]').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('articulos').scrollIntoView({
+        behavior: 'smooth'
+    });
+});
+
+// Newsletter form
+document.querySelector('.sidebar form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = this.querySelector('input[type="email"]').value;
+    if (email) {
+        alert('¡Gracias por suscribirte! Te enviaremos las últimas noticias a ' + email);
+        this.reset();
+    }
+});
+</script>
+{% endblock %}
