@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Resultados de búsqueda - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">Resultados de búsqueda</h1>
+
+    <p><strong>Término buscado:</strong> "{{ request.GET.q }}"</p>
+    <p><strong>Total resultados:</strong> {{ resultados|length }}</p>
+
+    {% if resultados %}
+        <div class="row">
+            {% for articulo in resultados %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <article class="card h-100 card-hover border-0 shadow-sm">
+                        {% if articulo.imagen %}
+                            <img src="{{ articulo.imagen.url }}" class="card-img-top" alt="{{ articulo.titulo }}" loading="lazy">
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <div class="mb-2">
+                                <a href="{% url 'categoria_detail' articulo.categoria.slug %}" class="category-badge">
+                                    {{ articulo.categoria.nombre }}
+                                </a>
+                                <div class="article-meta">
+                                    <i class="fas fa-calendar"></i> {{ articulo.fecha_publicacion|date:"d M Y" }}
+                                </div>
+                            </div>
+                            <h5 class="card-title">
+                                <a href="{% url 'articulo_detail' articulo.pk %}" class="text-decoration-none text-dark">
+                                    {{ articulo.titulo }}
+                                </a>
+                            </h5>
+                            <p class="card-text text-muted flex-grow-1">
+                                {{ articulo.resumen|default:articulo.contenido|truncatewords:25 }}
+                            </p>
+                            <div class="d-flex align-items-center mt-auto">
+                                {% if articulo.autor.foto %}
+                                    <img src="{{ articulo.autor.foto.url }}" class="author-avatar me-2" alt="{{ articulo.autor.nombre }}">
+                                {% else %}
+                                    <div class="author-avatar me-2 bg-secondary d-flex align-items-center justify-content-center">
+                                        <i class="fas fa-user text-white"></i>
+                                    </div>
+                                {% endif %}
+                                <a href="{% url 'autor_detail' articulo.autor.pk %}" class="text-decoration-none text-dark fw-medium small">
+                                    {{ articulo.autor.nombre }}
+                                </a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning mt-4">
+            No se encontraron resultados para tu búsqueda.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

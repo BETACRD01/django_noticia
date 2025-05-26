@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}{{ categoria.nombre }} - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">Categoría: {{ categoria.nombre }}</h1>
+
+    {% if articulos %}
+        <div class="row">
+            {% for articulo in articulos %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        {% if articulo.imagen %}
+                            <img src="{{ articulo.imagen.url }}" class="card-img-top" alt="{{ articulo.titulo }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ articulo.titulo }}</h5>
+                            <p class="card-text">{{ articulo.resumen|default:articulo.contenido|truncatewords:25 }}</p>
+                            <a href="{% url 'articulo_detail' articulo.pk %}" class="btn btn-outline-primary btn-sm">Leer más</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No hay artículos en esta categoría.</p>
+    {% endif %}
+</div>
+{% endblock %}

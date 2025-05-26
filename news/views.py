@@ -10,6 +10,8 @@ import json
 from .models import Articulo, Categoria, Autor, Comentario
 
 
+
+
 class HomeView(ListView):
     model = Articulo
     template_name = 'news/home.html'
@@ -193,3 +195,83 @@ def estadisticas_view(request):
         ).filter(articulos_count__gt=0).order_by('-articulos_count')[:5]
     }
     return render(request, 'news/estadisticas.html', context)
+
+
+
+# AutoresListView y BusquedaView
+
+class AutoresListView(ListView):
+    model = Autor
+    template_name = "news/autores_list.html"  # asegúrate que este archivo exista
+
+#revisar errore si sale en la importaciones
+
+
+class BusquedaView(ListView):
+    model = Articulo
+    template_name = "news/busqueda.html"
+    context_object_name = "resultados"
+
+    def get_queryset(self):
+        consulta = self.request.GET.get("q")
+        if consulta:
+            return Articulo.objects.filter(
+                Q(titulo__icontains=consulta) |
+                Q(resumen__icontains=consulta) |
+                Q(contenido__icontains=consulta) |
+                Q(autor__nombre__icontains=consulta) |
+                Q(categoria__nombre__icontains=consulta)
+            ).distinct()
+        return Articulo.objects.none()
+    
+
+from django.shortcuts import render
+from .models import Articulo, Categoria, Autor
+from django.db import models
+
+def estadisticas_view(request):
+    total_articulos = Articulo.objects.count()
+    total_categorias = Categoria.objects.count()
+    total_autores = Autor.objects.count()
+    total_visitas = Articulo.objects.aggregate(total=models.Sum('vistas'))['total'] or 0
+
+    return render(request, 'news/estadisticas.html', {
+        'total_articulos': total_articulos,
+        'total_categorias': total_categorias,
+        'total_autores': total_autores,
+        'total_visitas': total_visitas,
+    })
+
+class CategoriaDetailView(DetailView):
+    model = Categoria
+    template_name = 'news/categoria_detail.html'
+    context_object_name = 'categoria'
+    slug_field = 'slug'
+    slug_url_kwarg = 'slug'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['articulos'] = Articulo.objects.filter(categoria=self.object, publicado=True)
+        return context
+
+
+class ArticuloDetailView(DetailView):
+    model = Articulo
+    template_name = 'news/articulo_detail.html'
+    context_object_name = 'articulo'
+
+
+class AutorDetailView(DetailView):
+    model = Autor
+    template_name = 'news/autor_detail.html'
+    context_object_name = 'autor'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['articulos'] = Articulo.objects.filter(autor=self.object, publicado=True)
+        return context
+
+
+
+
+

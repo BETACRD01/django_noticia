@@ -98,7 +98,7 @@
                          class="card-img-top card-img-responsive {% if forloop.first %}card-img-first{% else %}card-img-other{% endif %}" 
                          alt="{{ articulo.titulo }}"
                                loading="lazy">
-                                { % else %}
+                                {% else %}
                       <div class="card-img-top card-img-responsive {% if forloop.first %}card-img-first{% else %}card-img-other{% endif %} bg-light d-flex align-items-center justify-content-center">
                      <i class="fas fa-image fa-3x text-muted"></i>
                          </div>
@@ -239,6 +239,54 @@
         </div>
     </div>
 </section>
+
+<!-- Modal para imagen ampliada -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalTitle">Imagen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img id="modalImage" src="/placeholder.svg" class="img-fluid rounded" alt="Imagen ampliada">
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.image-hover:hover {
+    transform: scale(1.05);
+}
+
+.image-container:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+#modalImage {
+    max-height: 70vh;
+    width: auto;
+}
+</style>
+
+<script>
+function openImageModal(imageSrc, title) {
+    document.getElementById('modalImage').src = imageSrc;
+    document.getElementById('imageModalTitle').textContent = title;
+    new bootstrap.Modal(document.getElementById('imageModal')).show();
+}
+
+// Cerrar modal con tecla Escape
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('imageModal'));
+        if (modal) {
+            modal.hide();
+        }
+    }
+});
+</script>
 {% endblock %}
 
 {% block extra_js %}

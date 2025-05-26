@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}{{ autor.nombre }} - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="d-flex align-items-center mb-4">
+                {% if autor.foto %}
+                    <img src="{{ autor.foto.url }}" class="author-avatar me-3" alt="{{ autor.nombre }}">
+                {% else %}
+                    <div class="author-avatar me-3 bg-secondary d-flex align-items-center justify-content-center">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                {% endif %}
+                <div>
+                    <h2 class="mb-0">{{ autor.nombre }}</h2>
+                    <small class="text-muted">{{ autor.articulos_count }} artículos publicados</small>
+                </div>
+            </div>
+
+            {% if autor.biografia %}
+                <p class="mb-4">{{ autor.biografia }}</p>
+            {% endif %}
+
+            <h4 class="mb-3">Artículos de {{ autor.nombre }}</h4>
+
+            {% if articulos %}
+                <div class="row">
+                    {% for articulo in articulos %}
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100 shadow-sm">
+                                {% if articulo.imagen %}
+                                    <img src="{{ articulo.imagen.url }}" class="card-img-top" alt="{{ articulo.titulo }}">
+                                {% endif %}
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ articulo.titulo }}</h5>
+                                    <p class="card-text">{{ articulo.resumen|default:articulo.contenido|truncatewords:20 }}</p>
+                                    <a href="{% url 'articulo_detail' articulo.pk %}" class="btn btn-outline-primary btn-sm">Leer más</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted">Este autor aún no ha publicado artículos.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

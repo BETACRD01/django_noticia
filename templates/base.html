@@ -185,6 +185,59 @@
                 margin-bottom: 1rem;
             }
         }
+
+        /* Estilos para imágenes responsivas */
+        .image-container {
+            position: relative;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+
+        .image-container::after {
+            content: '🔍';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px 8px;
+            border-radius: 50%;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-container:hover::after {
+            opacity: 1;
+        }
+
+        /* Modal personalizado */
+        .modal-content {
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid var(--border-color);
+            background: var(--light-color);
+            border-radius: 1rem 1rem 0 0;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        /* Animación suave para el modal */
+        .modal.fade .modal-dialog {
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.show .modal-dialog {
+            transform: scale(1);
+        }
+    
     </style>
     
     {% block extra_css %}{% endblock %}

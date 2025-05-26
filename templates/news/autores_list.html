@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Autores - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">Autores</h1>
+
+    {% if object_list %}
+        <div class="row">
+            {% for autor in object_list %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        {% if autor.foto %}
+                            <img src="{{ autor.foto.url }}" class="card-img-top" alt="{{ autor.nombre }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ autor.nombre }}</h5>
+                            <p class="card-text">{{ autor.descripcion|default:"Sin descripción" }}</p>
+                            <a href="{% url 'autor_detail' autor.pk %}" class="btn btn-primary btn-sm">Ver Perfil</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No hay autores disponibles.</p>
+    {% endif %}
+</div>
+{% endblock %}

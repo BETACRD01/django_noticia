@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}{{ articulo.titulo }} - {{ site_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <h1 class="mb-3">{{ articulo.titulo }}</h1>
+
+            <div class="mb-3 text-muted small">
+                <i class="fas fa-calendar me-1"></i> {{ articulo.fecha_publicacion|date:"d M Y" }}
+                <i class="fas fa-eye ms-3 me-1"></i> {{ articulo.vistas }} vistas
+            </div>
+
+            {% if articulo.imagen %}
+                <img src="{{ articulo.imagen.url }}" class="img-fluid mb-4" alt="{{ articulo.titulo }}">
+            {% endif %}
+
+            <div class="mb-4">
+                {{ articulo.contenido|linebreaks }}
+            </div>
+
+            <p class="text-muted">
+                Categoría: <a href="{% url 'categoria_detail' articulo.categoria.slug %}">{{ articulo.categoria.nombre }}</a>
+            </p>
+
+            <div class="d-flex align-items-center mt-4">
+                {% if articulo.autor.foto %}
+                    <img src="{{ articulo.autor.foto.url }}" class="author-avatar me-3" alt="{{ articulo.autor.nombre }}">
+                {% else %}
+                    <div class="author-avatar me-3 bg-secondary d-flex align-items-center justify-content-center">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                {% endif %}
+                <div>
+                    <strong>{{ articulo.autor.nombre }}</strong><br>
+                    <small class="text-muted">{{ articulo.autor.articulos_count }} artículos publicados</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar (si lo deseas, puedes agregar aquí artículos relacionados o destacados) -->
+        <div class="col-lg-4">
+            <!-- Puedes reutilizar una sidebar aquí -->
+        </div>
+    </div>
+</div>
+{% endblock %}
