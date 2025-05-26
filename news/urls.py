@@ -1,6 +1,5 @@
 from django.urls import path
 from . import views
-from .views import BusquedaView
 
 urlpatterns = [
     path('', views.HomeView.as_view(), name='home'),
@@ -11,6 +10,4 @@ urlpatterns = [
     path('buscar/', views.BusquedaView.as_view(), name='busqueda'),
     path('estadisticas/', views.estadisticas_view, name='estadisticas'),
     path('api/comentario/', views.agregar_comentario, name='agregar_comentario'),
-    path("buscar/", BusquedaView.as_view(), name="busqueda"),
-
 ]

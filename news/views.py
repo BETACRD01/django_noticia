@@ -10,8 +10,6 @@ import json
 from .models import Articulo, Categoria, Autor, Comentario
 
 
-
-
 class HomeView(ListView):
     model = Articulo
     template_name = 'news/home.html'
@@ -56,7 +54,11 @@ class ArticuloDetailView(DetailView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['comentarios'] = self.object.comentarios.filter(aprobado=True).order_by('fecha')
+        # Obtener comentarios aprobados ordenados por fecha (más recientes primero)
+        context['comentarios'] = self.object.comentarios.filter(
+            aprobado=True
+        ).order_by('-fecha')
+        
         context['articulos_relacionados'] = Articulo.objects.filter(
             categoria=self.object.categoria,
             publicado=True
@@ -111,7 +113,7 @@ class AutoresListView(ListView):
     def get_queryset(self):
         return Autor.objects.filter(activo=True).annotate(
             articulos_count=Count('articulos', filter=Q(articulos__publicado=True))
-        ).filter(articulos_count__gt=0).order_by('nombre')
+        ).order_by('nombre')  # Removí el filtro que causaba el problema
 
 
 class BusquedaView(ListView):
@@ -139,17 +141,40 @@ class BusquedaView(ListView):
 
 @csrf_exempt
 def agregar_comentario(request):
+    """Vista para agregar comentarios vía AJAX"""
     if request.method == 'POST':
         try:
+            # Obtener la IP del usuario
+            def get_client_ip(request):
+                x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+                if x_forwarded_for:
+                    ip = x_forwarded_for.split(',')[0]
+                else:
+                    ip = request.META.get('REMOTE_ADDR')
+                return ip
+            
             data = json.loads(request.body)
             articulo_id = data.get('articulo_id')
-            nombre_usuario = data.get('nombre_usuario')
-            email = data.get('email', '')
-            texto = data.get('texto')
+            nombre_usuario = data.get('nombre_usuario', '').strip()
+            email = data.get('email', '').strip()
+            texto = data.get('texto', '').strip()
             
-            if not all([articulo_id, nombre_usuario, texto]):
+            print(f"Datos recibidos: {data}")  # Debug
+            
+            # Validaciones
+            if not articulo_id:
                 return JsonResponse({
-                    'error': 'Los campos nombre y comentario son requeridos'
+                    'error': 'ID del artículo es requerido'
+                }, status=400)
+            
+            if not nombre_usuario:
+                return JsonResponse({
+                    'error': 'El nombre es requerido'
+                }, status=400)
+            
+            if not texto:
+                return JsonResponse({
+                    'error': 'El comentario es requerido'
                 }, status=400)
             
             if len(texto) < 10:
@@ -157,13 +182,44 @@ def agregar_comentario(request):
                     'error': 'El comentario debe tener al menos 10 caracteres'
                 }, status=400)
             
-            articulo = get_object_or_404(Articulo, id=articulo_id, publicado=True)
+            if len(nombre_usuario) > 100:
+                return JsonResponse({
+                    'error': 'El nombre no puede tener más de 100 caracteres'
+                }, status=400)
+            
+            if len(texto) > 1000:
+                return JsonResponse({
+                    'error': 'El comentario no puede tener más de 1000 caracteres'
+                }, status=400)
+            
+            # Validar email si se proporciona
+            if email:
+                import re
+                email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+                if not re.match(email_pattern, email):
+                    return JsonResponse({
+                        'error': 'El formato del email no es válido'
+                    }, status=400)
+            
+            # Verificar que el artículo existe y está publicado
+            try:
+                articulo = Articulo.objects.get(id=articulo_id, publicado=True)
+            except Articulo.DoesNotExist:
+                return JsonResponse({
+                    'error': 'El artículo no existe o no está publicado'
+                }, status=404)
+            
+            # Crear el comentario
             comentario = Comentario.objects.create(
                 articulo=articulo,
                 nombre_usuario=nombre_usuario,
                 email=email,
-                texto=texto
+                texto=texto,
+                aprobado=True,  # Los comentarios se aprueban automáticamente
+                ip_address=get_client_ip(request)
             )
+            
+            print(f"Comentario creado: {comentario}")  # Debug
             
             return JsonResponse({
                 'success': True,
@@ -172,12 +228,23 @@ def agregar_comentario(request):
                     'nombre_usuario': comentario.nombre_usuario,
                     'texto': comentario.texto,
                     'fecha': comentario.fecha.strftime('%d de %B de %Y, %H:%M')
-                }
+                },
+                'mensaje': 'Comentario agregado exitosamente'
             })
+            
+        except json.JSONDecodeError:
+            return JsonResponse({
+                'error': 'Datos JSON inválidos'
+            }, status=400)
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+            print(f"Error al crear comentario: {str(e)}")  # Debug
+            return JsonResponse({
+                'error': f'Error interno del servidor: {str(e)}'
+            }, status=500)
     
-    return JsonResponse({'error': 'Método no permitido'}, status=405)
+    return JsonResponse({
+        'error': 'Método no permitido'
+    }, status=405)
 
 
 def estadisticas_view(request):
@@ -195,83 +262,3 @@ def estadisticas_view(request):
         ).filter(articulos_count__gt=0).order_by('-articulos_count')[:5]
     }
     return render(request, 'news/estadisticas.html', context)
-
-
-
-# AutoresListView y BusquedaView
-
-class AutoresListView(ListView):
-    model = Autor
-    template_name = "news/autores_list.html"  # asegúrate que este archivo exista
-
-#revisar errore si sale en la importaciones
-
-
-class BusquedaView(ListView):
-    model = Articulo
-    template_name = "news/busqueda.html"
-    context_object_name = "resultados"
-
-    def get_queryset(self):
-        consulta = self.request.GET.get("q")
-        if consulta:
-            return Articulo.objects.filter(
-                Q(titulo__icontains=consulta) |
-                Q(resumen__icontains=consulta) |
-                Q(contenido__icontains=consulta) |
-                Q(autor__nombre__icontains=consulta) |
-                Q(categoria__nombre__icontains=consulta)
-            ).distinct()
-        return Articulo.objects.none()
-    
-
-from django.shortcuts import render
-from .models import Articulo, Categoria, Autor
-from django.db import models
-
-def estadisticas_view(request):
-    total_articulos = Articulo.objects.count()
-    total_categorias = Categoria.objects.count()
-    total_autores = Autor.objects.count()
-    total_visitas = Articulo.objects.aggregate(total=models.Sum('vistas'))['total'] or 0
-
-    return render(request, 'news/estadisticas.html', {
-        'total_articulos': total_articulos,
-        'total_categorias': total_categorias,
-        'total_autores': total_autores,
-        'total_visitas': total_visitas,
-    })
-
-class CategoriaDetailView(DetailView):
-    model = Categoria
-    template_name = 'news/categoria_detail.html'
-    context_object_name = 'categoria'
-    slug_field = 'slug'
-    slug_url_kwarg = 'slug'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['articulos'] = Articulo.objects.filter(categoria=self.object, publicado=True)
-        return context
-
-
-class ArticuloDetailView(DetailView):
-    model = Articulo
-    template_name = 'news/articulo_detail.html'
-    context_object_name = 'articulo'
-
-
-class AutorDetailView(DetailView):
-    model = Autor
-    template_name = 'news/autor_detail.html'
-    context_object_name = 'autor'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['articulos'] = Articulo.objects.filter(autor=self.object, publicado=True)
-        return context
-
-
-
-
-

@@ -1,50 +1,104 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block title %}{{ autor.nombre }} - {{ site_name }}{% endblock %}
 
 {% block content %}
 <div class="container py-5">
     <div class="row">
-        <div class="col-lg-8">
-            <div class="d-flex align-items-center mb-4">
-                {% if autor.foto %}
-                    <img src="{{ autor.foto.url }}" class="author-avatar me-3" alt="{{ autor.nombre }}">
-                {% else %}
-                    <div class="author-avatar me-3 bg-secondary d-flex align-items-center justify-content-center">
-                        <i class="fas fa-user text-white"></i>
-                    </div>
-                {% endif %}
-                <div>
-                    <h2 class="mb-0">{{ autor.nombre }}</h2>
-                    <small class="text-muted">{{ autor.articulos_count }} artículos publicados</small>
-                </div>
-            </div>
-
-            {% if autor.biografia %}
-                <p class="mb-4">{{ autor.biografia }}</p>
-            {% endif %}
-
-            <h4 class="mb-3">Artículos de {{ autor.nombre }}</h4>
-
-            {% if articulos %}
-                <div class="row">
-                    {% for articulo in articulos %}
-                        <div class="col-md-6 mb-4">
-                            <div class="card h-100 shadow-sm">
-                                {% if articulo.imagen %}
-                                    <img src="{{ articulo.imagen.url }}" class="card-img-top" alt="{{ articulo.titulo }}">
-                                {% endif %}
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ articulo.titulo }}</h5>
-                                    <p class="card-text">{{ articulo.resumen|default:articulo.contenido|truncatewords:20 }}</p>
-                                    <a href="{% url 'articulo_detail' articulo.pk %}" class="btn btn-outline-primary btn-sm">Leer más</a>
+        <div class="col-12">
+            <!-- Información del autor -->
+            <div class="card mb-5">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-3 text-center">
+                            {% if autor.foto %}
+                                <img src="{{ autor.foto.url }}" 
+                                     class="rounded-circle img-fluid" 
+                                     style="width: 150px; height: 150px; object-fit: cover;" 
+                                     alt="{{ autor.nombre }}">
+                            {% else %}
+                                <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mx-auto" 
+                                     style="width: 150px; height: 150px;">
+                                    <i class="fas fa-user fa-4x text-white"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-9">
+                            <h1 class="display-5 fw-bold">{{ autor.nombre }}</h1>
+                            <p class="lead">{{ autor.bio }}</p>
+                            <div class="d-flex gap-4">
+                                <div>
+                                    <strong>{{ articulos.paginator.count }}</strong>
+                                    <small class="text-muted">Artículos</small>
+                                </div>
+                                <div>
+                                    <strong>{{ autor.fecha_ingreso|date:"Y" }}</strong>
+                                    <small class="text-muted">Desde</small>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Artículos del autor -->
+            <h2 class="h3 fw-bold mb-4">Artículos de {{ autor.nombre }}</h2>
+            
+            {% if articulos %}
+                <div class="row g-4">
+                    {% for articulo in articulos %}
+                        <div class="col-md-6 col-lg-4">
+                            <article class="card h-100 card-hover border-0 shadow-sm">
+                                {% if articulo.imagen %}
+                                    <img src="{{ articulo.imagen.url }}" 
+                                         class="card-img-top" 
+                                         style="height: 200px; object-fit: cover;" 
+                                         alt="{{ articulo.titulo }}">
+                                {% endif %}
+                                
+                                <div class="card-body d-flex flex-column">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <a href="{% url 'categoria_detail' articulo.categoria.slug %}" 
+                                           class="category-badge">
+                                            {{ articulo.categoria.nombre }}
+                                        </a>
+                                        <div class="article-meta">
+                                            <i class="fas fa-calendar"></i>
+                                            {{ articulo.fecha_publicacion|date:"d M Y" }}
+                                        </div>
+                                    </div>
+                                    
+                                    <h5 class="card-title">
+                                        <a href="{% url 'articulo_detail' articulo.pk %}" 
+                                           class="text-decoration-none text-dark">
+                                            {{ articulo.titulo }}
+                                        </a>
+                                    </h5>
+                                    
+                                    <p class="card-text text-muted flex-grow-1">
+                                        {{ articulo.resumen|default:articulo.contenido|truncatewords:15 }}
+                                    </p>
+                                    
+                                    <div class="d-flex align-items-center justify-content-between mt-auto">
+                                        <div class="article-meta">
+                                            <i class="fas fa-eye"></i>
+                                            {{ articulo.vistas }} vistas
+                                        </div>
+                                        <div class="article-meta">
+                                            <i class="fas fa-comments"></i>
+                                            {{ articulo.get_comentarios_count }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
                         </div>
                     {% endfor %}
                 </div>
             {% else %}
-                <p class="text-muted">Este autor aún no ha publicado artículos.</p>
+                <div class="text-center py-5">
+                    <i class="fas fa-newspaper fa-4x text-muted mb-3"></i>
+                    <h4 class="text-muted">Este autor no tiene artículos publicados</h4>
+                </div>
             {% endif %}
         </div>
     </div>

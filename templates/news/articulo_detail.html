@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block title %}{{ articulo.titulo }} - {{ site_name }}{% endblock %}
 
@@ -6,44 +6,440 @@
 <div class="container py-5">
     <div class="row">
         <div class="col-lg-8">
-            <h1 class="mb-3">{{ articulo.titulo }}</h1>
-
-            <div class="mb-3 text-muted small">
-                <i class="fas fa-calendar me-1"></i> {{ articulo.fecha_publicacion|date:"d M Y" }}
-                <i class="fas fa-eye ms-3 me-1"></i> {{ articulo.vistas }} vistas
-            </div>
-
-            {% if articulo.imagen %}
-                <img src="{{ articulo.imagen.url }}" class="img-fluid mb-4" alt="{{ articulo.titulo }}">
-            {% endif %}
-
-            <div class="mb-4">
-                {{ articulo.contenido|linebreaks }}
-            </div>
-
-            <p class="text-muted">
-                Categoría: <a href="{% url 'categoria_detail' articulo.categoria.slug %}">{{ articulo.categoria.nombre }}</a>
-            </p>
-
-            <div class="d-flex align-items-center mt-4">
-                {% if articulo.autor.foto %}
-                    <img src="{{ articulo.autor.foto.url }}" class="author-avatar me-3" alt="{{ articulo.autor.nombre }}">
-                {% else %}
-                    <div class="author-avatar me-3 bg-secondary d-flex align-items-center justify-content-center">
-                        <i class="fas fa-user text-white"></i>
+            <article class="card border-0 shadow-sm">
+                <!-- Imagen principal -->
+                {% if articulo.imagen %}
+                    <div class="image-container mb-4" style="height: 400px; cursor: pointer;" 
+                         onclick="openImageModal('{{ articulo.imagen.url }}', '{{ articulo.titulo|escapejs }}')">
+                        <img src="{{ articulo.imagen.url }}" 
+                             class="img-fluid w-100 h-100 image-hover rounded" 
+                             style="object-fit: cover;" 
+                             alt="{{ articulo.titulo }}">
                     </div>
                 {% endif %}
-                <div>
-                    <strong>{{ articulo.autor.nombre }}</strong><br>
-                    <small class="text-muted">{{ articulo.autor.articulos_count }} artículos publicados</small>
+                
+                <div class="card-body">
+                    <!-- Metadatos -->
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <a href="{% url 'categoria_detail' articulo.categoria.slug %}" 
+                           class="category-badge">
+                            {{ articulo.categoria.nombre }}
+                        </a>
+                        <div class="article-meta">
+                            <i class="fas fa-calendar"></i>
+                            {{ articulo.fecha_publicacion|date:"d de F de Y" }}
+                        </div>
+                        <div class="article-meta">
+                            <i class="fas fa-eye"></i>
+                            {{ articulo.vistas }} vistas
+                        </div>
+                    </div>
+                    
+                    <!-- Título -->
+                    <h1 class="display-5 fw-bold mb-4">{{ articulo.titulo }}</h1>
+                    
+                    <!-- Autor -->
+                    <div class="d-flex align-items-center mb-4 p-3 bg-light rounded">
+                        {% if articulo.autor.foto %}
+                            <img src="{{ articulo.autor.foto.url }}" 
+                                 class="rounded-circle me-3" 
+                                 style="width: 60px; height: 60px; object-fit: cover;" 
+                                 alt="{{ articulo.autor.nombre }}">
+                        {% else %}
+                            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center me-3" 
+                                 style="width: 60px; height: 60px;">
+                                <i class="fas fa-user text-white fa-lg"></i>
+                            </div>
+                        {% endif %}
+                        <div>
+                            <h6 class="mb-0">
+                                <a href="{% url 'autor_detail' articulo.autor.pk %}" 
+                                   class="text-decoration-none">
+                                    {{ articulo.autor.nombre }}
+                                </a>
+                            </h6>
+                            <small class="text-muted">{{ articulo.autor.bio|truncatechars:100 }}</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Contenido -->
+                    <div class="article-content mb-5">
+                        {{ articulo.contenido|linebreaks }}
+                    </div>
+                    
+                    <!-- Sección de Comentarios -->
+                    <div class="comments-section">
+                        <hr class="my-5">
+                        
+                        <!-- Título de comentarios -->
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <h4 class="fw-bold">
+                                <i class="fas fa-comments me-2 text-primary"></i>
+                                Comentarios (<span id="contador-comentarios">{{ comentarios.count }}</span>)
+                            </h4>
+                        </div>
+                        
+                        <!-- Formulario para agregar comentario -->
+                        <div class="card bg-light border-0 mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">
+                                    <i class="fas fa-edit me-2"></i>Deja tu comentario
+                                </h5>
+                                <form id="comentarioForm" data-articulo-id="{{ articulo.id }}">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="nombre" class="form-label">Nombre *</label>
+                                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="email" class="form-label">Email (opcional)</label>
+                                            <input type="email" class="form-control" id="email" name="email">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="comentario" class="form-label">Comentario *</label>
+                                        <textarea class="form-control" id="comentario" name="comentario" rows="4" 
+                                                  placeholder="Escribe tu comentario aquí..." required></textarea>
+                                        <div class="form-text">Mínimo 10 caracteres</div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary" id="btnEnviar">
+                                        <i class="fas fa-paper-plane me-2"></i>Enviar Comentario
+                                    </button>
+                                </form>
+                                
+                                <!-- Mensaje de respuesta -->
+                                <div id="mensajeRespuesta" class="mt-3" style="display: none;"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Lista de comentarios -->
+                        <div id="listaComentarios">
+                            {% for comentario in comentarios %}
+                                <div class="card mb-3 comentario-item">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-start">
+                                            <div class="avatar-comentario me-3">
+                                                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center" 
+                                                     style="width: 45px; height: 45px;">
+                                                    <i class="fas fa-user text-white"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                                    <h6 class="mb-0 fw-bold">{{ comentario.nombre_usuario }}</h6>
+                                                    <small class="text-muted">
+                                                        <i class="fas fa-clock me-1"></i>
+                                                        {{ comentario.fecha|date:"d M Y, H:i" }}
+                                                    </small>
+                                                </div>
+                                                <p class="mb-0">{{ comentario.texto|linebreaks }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <div class="text-center py-4" id="sinComentarios">
+                                    <i class="fas fa-comment-slash fa-3x text-muted mb-3"></i>
+                                    <h5 class="text-muted">No hay comentarios aún</h5>
+                                    <p class="text-muted">¡Sé el primero en comentar este artículo!</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+        
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Artículos relacionados -->
+            {% if articulos_relacionados %}
+                <div class="sidebar">
+                    <h5><i class="fas fa-newspaper me-2"></i>Artículos Relacionados</h5>
+                    {% for relacionado in articulos_relacionados %}
+                        <div class="d-flex mb-3">
+                            {% if relacionado.imagen %}
+                                <img src="{{ relacionado.imagen.url }}" 
+                                     class="rounded me-3" 
+                                     style="width: 80px; height: 60px; object-fit: cover; cursor: pointer;" 
+                                     alt="{{ relacionado.titulo }}"
+                                     onclick="openImageModal('{{ relacionado.imagen.url }}', '{{ relacionado.titulo|escapejs }}')">
+                            {% endif %}
+                            <div>
+                                <a href="{% url 'articulo_detail' relacionado.pk %}" 
+                                   class="text-decoration-none fw-medium small">
+                                    {{ relacionado.titulo|truncatechars:60 }}
+                                </a>
+                                <div class="small text-muted">
+                                    {{ relacionado.fecha_publicacion|date:"d M Y" }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <!-- Estadísticas del artículo -->
+            <div class="sidebar">
+                <h5><i class="fas fa-chart-line me-2"></i>Estadísticas</h5>
+                <div class="row text-center">
+                    <div class="col-6">
+                        <div class="p-3">
+                            <i class="fas fa-eye fa-2x text-primary mb-2"></i>
+                            <h4 class="mb-0">{{ articulo.vistas }}</h4>
+                            <small class="text-muted">Vistas</small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="p-3">
+                            <i class="fas fa-comments fa-2x text-success mb-2"></i>
+                            <h4 class="mb-0" id="contador-sidebar">{{ comentarios.count }}</h4>
+                            <small class="text-muted">Comentarios</small>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-        <!-- Sidebar (si lo deseas, puedes agregar aquí artículos relacionados o destacados) -->
-        <div class="col-lg-4">
-            <!-- Puedes reutilizar una sidebar aquí -->
+<!-- Modal para imagen ampliada -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalTitle">Imagen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center p-0">
+                <img id="modalImage" src="/placeholder.svg" class="img-fluid w-100" alt="Imagen ampliada" style="max-height: 80vh; object-fit: contain;">
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+.comentario-item {
+    transition: all 0.3s ease;
+    border: 1px solid #e5e7eb;
+}
+
+.comentario-item:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.avatar-comentario {
+    flex-shrink: 0;
+}
+
+.comments-section {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 1rem;
+    margin-top: 2rem;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+}
+
+.nuevo-comentario {
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.image-hover:hover {
+    transform: scale(1.05);
+}
+
+.image-container:hover {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+</style>
+
+<script>
+function openImageModal(imageSrc, title) {
+    document.getElementById('modalImage').src = imageSrc;
+    document.getElementById('imageModalTitle').textContent = title;
+    new bootstrap.Modal(document.getElementById('imageModal')).show();
+}
+
+// Manejo del formulario de comentarios
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('comentarioForm');
+    
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const articuloId = form.getAttribute('data-articulo-id');
+            const nombre = document.getElementById('nombre').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const comentario = document.getElementById('comentario').value.trim();
+            const btnEnviar = document.getElementById('btnEnviar');
+            
+            // Validaciones
+            if (!nombre || !comentario) {
+                mostrarMensaje('Por favor, completa todos los campos requeridos.', 'danger');
+                return;
+            }
+            
+            if (comentario.length < 10) {
+                mostrarMensaje('El comentario debe tener al menos 10 caracteres.', 'warning');
+                return;
+            }
+            
+            // Deshabilitar botón y mostrar loading
+            btnEnviar.disabled = true;
+            btnEnviar.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Enviando...';
+            
+            // Crear el objeto de datos
+            const datos = {
+                articulo_id: parseInt(articuloId),
+                nombre_usuario: nombre,
+                email: email,
+                texto: comentario
+            };
+            
+            // Enviar comentario
+            fetch('/api/comentario/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(datos)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Limpiar formulario
+                    form.reset();
+                    
+                    // Mostrar mensaje de éxito
+                    mostrarMensaje('¡Comentario enviado exitosamente!', 'success');
+                    
+                    // Agregar nuevo comentario a la lista
+                    agregarComentarioALista(data.comentario);
+                    
+                    // Ocultar mensaje "sin comentarios" si existe
+                    const sinComentarios = document.getElementById('sinComentarios');
+                    if (sinComentarios) {
+                        sinComentarios.style.display = 'none';
+                    }
+                    
+                    // Actualizar contador de comentarios
+                    actualizarContadorComentarios();
+                    
+                } else {
+                    mostrarMensaje(data.error || 'Error al enviar el comentario.', 'danger');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                mostrarMensaje('Error de conexión. Inténtalo de nuevo.', 'danger');
+            })
+            .finally(() => {
+                // Rehabilitar botón
+                btnEnviar.disabled = false;
+                btnEnviar.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Enviar Comentario';
+            });
+        });
+    }
+    
+    // Contador de caracteres para el textarea
+    const textarea = document.getElementById('comentario');
+    if (textarea) {
+        textarea.addEventListener('input', function() {
+            const texto = this.value;
+            const contador = texto.length;
+            const minimo = 10;
+            
+            let mensaje = contador + ' caracteres';
+            if (contador < minimo) {
+                mensaje += ' (mínimo ' + minimo + ')';
+                this.classList.add('is-invalid');
+                this.classList.remove('is-valid');
+            } else {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            }
+            
+            this.nextElementSibling.textContent = mensaje;
+        });
+    }
+});
+
+function mostrarMensaje(mensaje, tipo) {
+    const mensajeRespuesta = document.getElementById('mensajeRespuesta');
+    mensajeRespuesta.innerHTML = 
+        '<div class="alert alert-' + tipo + ' alert-dismissible fade show" role="alert">' +
+            mensaje +
+            '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+        '</div>';
+    mensajeRespuesta.style.display = 'block';
+    
+    // Auto-ocultar después de 5 segundos
+    setTimeout(function() {
+        mensajeRespuesta.style.display = 'none';
+    }, 5000);
+}
+
+function agregarComentarioALista(comentario) {
+    const listaComentarios = document.getElementById('listaComentarios');
+    const nuevoComentario = document.createElement('div');
+    nuevoComentario.className = 'card mb-3 comentario-item nuevo-comentario';
+    nuevoComentario.innerHTML = 
+        '<div class="card-body">' +
+            '<div class="d-flex align-items-start">' +
+                '<div class="avatar-comentario me-3">' +
+                    '<div class="rounded-circle bg-primary d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">' +
+                        '<i class="fas fa-user text-white"></i>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="flex-grow-1">' +
+                    '<div class="d-flex align-items-center justify-content-between mb-2">' +
+                        '<h6 class="mb-0 fw-bold">' + comentario.nombre_usuario + '</h6>' +
+                        '<small class="text-muted">' +
+                            '<i class="fas fa-clock me-1"></i>' +
+                            comentario.fecha +
+                        '</small>' +
+                    '</div>' +
+                    '<p class="mb-0">' + comentario.texto.replace(/\n/g, '<br>') + '</p>' +
+                '</div>' +
+            '</div>' +
+        '</div>';
+    
+    // Insertar al principio de la lista
+    listaComentarios.insertBefore(nuevoComentario, listaComentarios.firstChild);
+}
+
+function actualizarContadorComentarios() {
+    // Contar comentarios actuales
+    const comentarios = document.querySelectorAll('.comentario-item').length;
+    
+    // Actualizar contador en el título
+    const contadorTitulo = document.getElementById('contador-comentarios');
+    if (contadorTitulo) {
+        contadorTitulo.textContent = comentarios;
+    }
+    
+    // Actualizar contador en sidebar
+    const contadorSidebar = document.getElementById('contador-sidebar');
+    if (contadorSidebar) {
+        contadorSidebar.textContent = comentarios;
+    }
+}
+</script>
 {% endblock %}

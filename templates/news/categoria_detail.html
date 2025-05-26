@@ -1,30 +1,105 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block title %}{{ categoria.nombre }} - {{ site_name }}{% endblock %}
 
 {% block content %}
 <div class="container py-5">
-    <h1 class="mb-4">Categoría: {{ categoria.nombre }}</h1>
-
-    {% if articulos %}
-        <div class="row">
-            {% for articulo in articulos %}
-                <div class="col-md-6 col-lg-4 mb-4">
-                    <div class="card h-100 shadow-sm">
-                        {% if articulo.imagen %}
-                            <img src="{{ articulo.imagen.url }}" class="card-img-top" alt="{{ articulo.titulo }}">
-                        {% endif %}
-                        <div class="card-body">
-                            <h5 class="card-title">{{ articulo.titulo }}</h5>
-                            <p class="card-text">{{ articulo.resumen|default:articulo.contenido|truncatewords:25 }}</p>
-                            <a href="{% url 'articulo_detail' articulo.pk %}" class="btn btn-outline-primary btn-sm">Leer más</a>
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex align-items-center mb-4">
+                <h1 class="display-5 fw-bold me-3">{{ categoria.nombre }}</h1>
+                <span class="badge bg-primary fs-6">{{ articulos.paginator.count }} artículos</span>
+            </div>
+            
+            {% if categoria.descripcion %}
+                <p class="lead text-muted mb-4">{{ categoria.descripcion }}</p>
+            {% endif %}
+            
+            {% if articulos %}
+                <div class="row g-4">
+                    {% for articulo in articulos %}
+                        <div class="col-md-6 col-lg-4">
+                            <article class="card h-100 card-hover border-0 shadow-sm">
+                                {% if articulo.imagen %}
+                                    <img src="{{ articulo.imagen.url }}" 
+                                         class="card-img-top" 
+                                         style="height: 200px; object-fit: cover;" 
+                                         alt="{{ articulo.titulo }}">
+                                {% endif %}
+                                
+                                <div class="card-body d-flex flex-column">
+                                    <div class="article-meta mb-2">
+                                        <i class="fas fa-calendar"></i>
+                                        {{ articulo.fecha_publicacion|date:"d M Y" }}
+                                        <span class="ms-2">
+                                            <i class="fas fa-eye"></i>
+                                            {{ articulo.vistas }}
+                                        </span>
+                                    </div>
+                                    
+                                    <h5 class="card-title">
+                                        <a href="{% url 'articulo_detail' articulo.pk %}" 
+                                           class="text-decoration-none text-dark">
+                                            {{ articulo.titulo }}
+                                        </a>
+                                    </h5>
+                                    
+                                    <p class="card-text text-muted flex-grow-1">
+                                        {{ articulo.resumen|default:articulo.contenido|truncatewords:15 }}
+                                    </p>
+                                    
+                                    <div class="d-flex align-items-center justify-content-between mt-auto">
+                                        <small class="text-muted">
+                                            Por {{ articulo.autor.nombre }}
+                                        </small>
+                                        <small class="text-muted">
+                                            <i class="fas fa-comments"></i>
+                                            {{ articulo.get_comentarios_count }}
+                                        </small>
+                                    </div>
+                                </div>
+                            </article>
                         </div>
-                    </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
+                
+                <!-- Paginación -->
+                {% if articulos.has_other_pages %}
+                    <nav class="mt-5">
+                        <ul class="pagination justify-content-center">
+                            {% if articulos.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ articulos.previous_page_number }}">Anterior</a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for num in articulos.paginator.page_range %}
+                                {% if articulos.number == num %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ num }}</span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if articulos.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ articulos.next_page_number }}">Siguiente</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-newspaper fa-4x text-muted mb-3"></i>
+                    <h4 class="text-muted">No hay artículos en esta categoría</h4>
+                </div>
+            {% endif %}
         </div>
-    {% else %}
-        <p>No hay artículos en esta categoría.</p>
-    {% endif %}
+    </div>
 </div>
 {% endblock %}

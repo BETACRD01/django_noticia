@@ -980,3 +980,287 @@ Not Found: /placeholder.svg
 "GET / HTTP/1.1" 200 41675
 Not Found: /placeholder.svg
 "GET /placeholder.svg HTTP/1.1" 404 4968
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 41675
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4968
+"GET /media/articulos/_333.jpeg HTTP/1.1" 200 39452
+"GET /autores/ HTTP/1.1" 200 15621
+"GET /categoria/deportes/ HTTP/1.1" 200 15249
+"GET /autores/ HTTP/1.1" 200 15621
+"GET /estadisticas/ HTTP/1.1" 200 15747
+"GET / HTTP/1.1" 200 41675
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4968
+"GET /autores/ HTTP/1.1" 200 15621
+"GET /autor/2/ HTTP/1.1" 200 16933
+"GET /articulo/2/ HTTP/1.1" 200 16306
+"GET / HTTP/1.1" 200 41675
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4968
+"GET / HTTP/1.1" 200 41675
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4968
+"GET /articulo/2/ HTTP/1.1" 200 16306
+"GET / HTTP/1.1" 200 41675
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4968
+"GET /admin/ HTTP/1.1" 302 0
+"GET /estadisticas/ HTTP/1.1" 200 15747
+"GET /estadisticas/ HTTP/1.1" 200 15747
+"GET / HTTP/1.1" 200 41675
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4968
+"GET /media/articulos/_333.jpeg HTTP/1.1" 304 0
+"GET /autores/ HTTP/1.1" 200 15621
+"GET / HTTP/1.1" 200 41675
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4968
+"GET /admin/ HTTP/1.1" 302 0
+"GET /admin/login/?next=/admin/ HTTP/1.1" 200 4231
+"POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+"GET /admin/ HTTP/1.1" 200 13126
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 331
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 380
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 41675
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4968
+"GET /media/articulos/_333.jpeg HTTP/1.1" 304 0
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 41675
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4968
+"GET /autores/ HTTP/1.1" 200 15621
+"GET /autor/1/ HTTP/1.1" 200 16674
+"GET /categoria/tecnologia/ HTTP/1.1" 200 16162
+"GET /media/articulos/_333.jpeg HTTP/1.1" 304 0
+"GET /articulo/4/ HTTP/1.1" 200 16333
+"GET / HTTP/1.1" 200 41675
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4968
+"GET /autores/ HTTP/1.1" 200 15621
+"GET /autor/2/ HTTP/1.1" 200 16933
+"GET /admin/ HTTP/1.1" 200 13126
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+"GET /admin/news/comentario/add/ HTTP/1.1" 200 16784
+"GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 581
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/news/articulo/1/change/?_to_field=id HTTP/1.1" 200 26578
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /static/admin/img/tooltag-arrowright.svg HTTP/1.1" 200 280
+"GET /static/admin/img/icon-clock.svg HTTP/1.1" 200 677
+"GET /static/admin/img/icon-calendar.svg HTTP/1.1" 200 1086
+"GET /admin/news/comentario/add/ HTTP/1.1" 200 16784
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"POST /admin/news/comentario/add/ HTTP/1.1" 302 0
+"GET /admin/news/comentario/ HTTP/1.1" 200 15511
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /static/admin/js/filters.js HTTP/1.1" 200 978
+"GET /static/admin/img/search.svg HTTP/1.1" 200 458
+"GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+"GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 331
+"GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1097
+"GET /admin/news/comentario/?q= HTTP/1.1" 200 15397
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /admin/news/articulo/1/change/ HTTP/1.1" 200 26529
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET / HTTP/1.1" 200 41675
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4968
+"GET /media/articulos/_333.jpeg HTTP/1.1" 304 0
+"GET /articulo/1/ HTTP/1.1" 200 16407
+"GET / HTTP/1.1" 200 41675
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4968
+"GET /buscar/?q= HTTP/1.1" 200 14821
+"GET /categoria/tecnologia/ HTTP/1.1" 200 16162
+"GET /articulo/1/ HTTP/1.1" 200 16407
+"GET /categoria/tecnologia/ HTTP/1.1" 200 16162
+"GET /media/articulos/_333.jpeg HTTP/1.1" 304 0
+"GET / HTTP/1.1" 200 41675
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4968
+"GET /autores/ HTTP/1.1" 200 15621
+"GET /autor/2/ HTTP/1.1" 200 16933
+"GET /media/articulos/_333.jpeg HTTP/1.1" 304 0
+"GET / HTTP/1.1" 200 41675
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4968
+/home/willian/django_noticia/news/urls.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 41675
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4711
+"GET /categoria/tecnologia/ HTTP/1.1" 200 19900
+"GET /categoria/tecnologia/ HTTP/1.1" 200 19900
+"GET /autores/ HTTP/1.1" 200 14937
+"GET /autores/ HTTP/1.1" 200 14937
+"GET /autores/ HTTP/1.1" 200 14937
+"GET /autores/ HTTP/1.1" 200 14937
+"GET /estadisticas/ HTTP/1.1" 200 15747
+"GET /autores/ HTTP/1.1" 200 14937
+"GET / HTTP/1.1" 200 41675
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4711
+"GET /autores/ HTTP/1.1" 200 14937
+"GET /autores/ HTTP/1.1" 200 15621
+"GET / HTTP/1.1" 200 41675
+Not Found: /placeholder.svg
+"GET /media/articulos/_333.jpeg HTTP/1.1" 304 0
+"GET /placeholder.svg HTTP/1.1" 404 4711
+"GET /articulo/3/ HTTP/1.1" 200 30560
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4711
+"POST /api/comentario/ HTTP/1.1" 200 330
+"GET /articulo/3/ HTTP/1.1" 200 30560
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4711
+"GET / HTTP/1.1" 200 41675
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4711
+"GET /articulo/2/ HTTP/1.1" 200 30570
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4711
+"GET /articulo/2/ HTTP/1.1" 200 30570
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4711
+"GET /autores/ HTTP/1.1" 200 14937
+"GET /estadisticas/ HTTP/1.1" 200 15747
+"GET / HTTP/1.1" 200 41675
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4711
+"GET /autores/ HTTP/1.1" 200 14937
+"GET /admin/news/autor/add/ HTTP/1.1" 200 17057
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"POST /admin/news/autor/add/ HTTP/1.1" 302 0
+"GET /admin/news/autor/ HTTP/1.1" 200 16439
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /static/admin/img/search.svg HTTP/1.1" 304 0
+"GET /media/autores/hero-bg.jpg HTTP/1.1" 200 14727
+"GET /static/admin/img/icon-yes.svg HTTP/1.1" 304 0
+"GET /autores/ HTTP/1.1" 200 14937
+"GET /autores/ HTTP/1.1" 200 14937
+"GET /autores/ HTTP/1.1" 200 14937
+"GET /autores/ HTTP/1.1" 200 14937
+"GET /autores/ HTTP/1.1" 200 14937
+"GET /autores/ HTTP/1.1" 200 14937
+"GET /autores/ HTTP/1.1" 200 14937
+"GET /autores/ HTTP/1.1" 200 14937
+"GET /autores/ HTTP/1.1" 200 16254
+"GET /media/autores/hero-bg.jpg HTTP/1.1" 304 0
+"GET /autor/3/ HTTP/1.1" 200 16852
+"GET /media/autores/hero-bg.jpg HTTP/1.1" 304 0
+"GET / HTTP/1.1" 200 41675
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4711
+"GET /admin/news/articulo/add/ HTTP/1.1" 200 25273
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /static/admin/img/icon-changelink.svg HTTP/1.1" 304 0
+"GET /static/admin/img/icon-addlink.svg HTTP/1.1" 304 0
+"GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 304 0
+"POST /admin/news/articulo/add/ HTTP/1.1" 302 0
+"GET /admin/news/articulo/ HTTP/1.1" 200 21048
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+Not Found: /favicon.ico
+"GET / HTTP/1.1" 200 43280
+"GET /media/articulos/_333.jpeg HTTP/1.1" 200 39452
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4711
+"GET /media/autores/hero-bg.jpg HTTP/1.1" 200 14727
+Not Found: /favicon.ico
+"GET /autores/ HTTP/1.1" 200 16254
+Not Found: /favicon.ico
+"GET /autor/3/ HTTP/1.1" 200 19582
+"GET /media/articulos/A_intelig%C3%AAncia_artificial_IA_%C3%A9_um_ramo_da.jpeg HTTP/1.1" 200 72786
+"GET /categoria/tecnologia/ HTTP/1.1" 200 22567
+"GET /media/articulos/A_intelig%C3%AAncia_artificial_IA_%C3%A9_um_ramo_da.jpeg HTTP/1.1" 304 0
+"GET /articulo/5/ HTTP/1.1" 200 33127
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4711
+"GET /media/articulos/A_intelig%C3%AAncia_artificial_IA_%C3%A9_um_ramo_da.jpeg HTTP/1.1" 304 0
+Not Found: /favicon.ico
+"POST /api/comentario/ HTTP/1.1" 200 141
+"GET /articulo/5/ HTTP/1.1" 200 33127
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4711
+"GET /media/articulos/A_intelig%C3%AAncia_artificial_IA_%C3%A9_um_ramo_da.jpeg HTTP/1.1" 304 0
+"GET /media/autores/hero-bg.jpg HTTP/1.1" 304 0
+"GET /articulo/5/ HTTP/1.1" 200 33127
+Not Found: /placeholder.svg
+"GET /media/articulos/A_intelig%C3%AAncia_artificial_IA_%C3%A9_um_ramo_da.jpeg HTTP/1.1" 304 0
+"GET /placeholder.svg HTTP/1.1" 404 4711
+"GET / HTTP/1.1" 200 43280
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4711
+"GET /autores/ HTTP/1.1" 200 16254
+"GET /media/autores/hero-bg.jpg HTTP/1.1" 304 0
+"GET /admin/news/autor/ HTTP/1.1" 200 16235
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /media/autores/hero-bg.jpg HTTP/1.1" 200 14727
+"GET /static/admin/img/search.svg HTTP/1.1" 200 458
+"GET /admin/news/autor/2/change/ HTTP/1.1" 200 17586
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"POST /admin/news/autor/2/change/ HTTP/1.1" 302 0
+"GET /admin/news/autor/ HTTP/1.1" 200 16522
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /media/autores/naTW0BFU.jpeg HTTP/1.1" 200 37059
+"GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 436
+"GET /autores/ HTTP/1.1" 200 16389
+"GET /media/autores/naTW0BFU.jpeg HTTP/1.1" 304 0
+"GET /admin/news/autor/1/change/ HTTP/1.1" 200 17590
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"POST /admin/news/autor/1/change/ HTTP/1.1" 302 0
+"GET /admin/news/autor/ HTTP/1.1" 200 16605
+"GET /admin/jsi18n/ HTTP/1.1" 200 8691
+"GET /media/autores/noQHGJmP.jpeg HTTP/1.1" 200 11214
+"GET /media/autores/naTW0BFU.jpeg HTTP/1.1" 200 37059
+"GET /media/autores/hero-bg.jpg HTTP/1.1" 304 0
+Not Found: /favicon.ico
+"GET /favicon.ico HTTP/1.1" 404 4699
+"GET /autores/ HTTP/1.1" 200 16522
+"GET /media/autores/noQHGJmP.jpeg HTTP/1.1" 200 11214
+"GET /media/autores/naTW0BFU.jpeg HTTP/1.1" 200 37059
+"GET / HTTP/1.1" 200 43042
+"GET /media/autores/naTW0BFU.jpeg HTTP/1.1" 304 0
+Not Found: /placeholder.svg
+"GET /media/autores/noQHGJmP.jpeg HTTP/1.1" 304 0
+"GET /placeholder.svg HTTP/1.1" 404 4711
+Not Found: /favicon.ico
+"GET /autores/ HTTP/1.1" 200 16522
+"GET /media/autores/naTW0BFU.jpeg HTTP/1.1" 304 0
+"GET /media/autores/noQHGJmP.jpeg HTTP/1.1" 304 0
+"GET /autores/ HTTP/1.1" 200 15169
+"GET /autores/ HTTP/1.1" 200 15169
+"GET /autores/ HTTP/1.1" 200 16522
+"GET /media/autores/hero-bg.jpg HTTP/1.1" 200 14727
+"GET /media/autores/noQHGJmP.jpeg HTTP/1.1" 304 0
+"GET /media/autores/naTW0BFU.jpeg HTTP/1.1" 304 0
+Not Found: /favicon.ico
+/home/willian/django_noticia/news/views.py changed, reloading.
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 43042
+Not Found: /placeholder.svg
+"GET /media/autores/noQHGJmP.jpeg HTTP/1.1" 200 11214
+"GET /placeholder.svg HTTP/1.1" 404 4711
+"GET /media/autores/naTW0BFU.jpeg HTTP/1.1" 200 37059
+Not Found: /favicon.ico
+"GET /media/articulos/_333.jpeg HTTP/1.1" 304 0
+/home/willian/django_noticia/news/urls.py changed, reloading.
+Watching for file changes with StatReloader
+Watching for file changes with StatReloader
+"GET / HTTP/1.1" 200 43042
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4711
+"GET /media/autores/naTW0BFU.jpeg HTTP/1.1" 200 37059
+"GET /media/autores/noQHGJmP.jpeg HTTP/1.1" 200 11214
+"GET /media/autores/hero-bg.jpg HTTP/1.1" 200 14727
+Not Found: /favicon.ico
+"GET /autores/ HTTP/1.1" 200 24271
+"GET /autor/3/ HTTP/1.1" 200 19583
+"GET /media/articulos/A_intelig%C3%AAncia_artificial_IA_%C3%A9_um_ramo_da.jpeg HTTP/1.1" 304 0
+"GET /categoria/tecnologia/ HTTP/1.1" 200 22568
+"GET /articulo/5/ HTTP/1.1" 200 36296
+Not Found: /placeholder.svg
+"GET /placeholder.svg HTTP/1.1" 404 4711
